@@ -36,7 +36,7 @@ pipeline {
 
         stage('Upload docker image') {
             steps {
-                withCredentials([string(credentialsId: 'dockerpwd-id', variable: 'dockerpwd')]) {
+                withCredentials([string(credentialsId: 'docker-credentials', variable: 'dockerpwd')]) {
                     sh 'docker login -u korinrovira -p ${dockerpwd}'
                     sh 'docker image push korinrovira/spring-webapp:latest'
                 }
