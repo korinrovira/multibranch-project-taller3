@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'taller3'
+        label 'linux-worker'
     }
 
     stages {
@@ -30,14 +30,14 @@ pipeline {
 
         stage('Tag docker image') {
             steps {
-                sh 'docker image tag spring-webapp korinrovira/spring-webapp:latest'
+                sh 'docker image tag spring-webapp mmadrigal/spring-webapp:latest'
             }
         }
 
         stage('Upload docker image') {
             steps {
                 withCredentials([string(credentialsId: 'dockerpwd-id', variable: 'dockerpwd')]) {
-                    sh 'docker login -u korinrovira -p ${dockerpwd}'
+                    sh 'docker login -u mmadrigal -p ${dockerpwd}'
                     sh 'docker image push mmadrigal/spring-webapp:latest'
                 }
             }
