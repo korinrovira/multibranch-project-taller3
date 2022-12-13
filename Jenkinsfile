@@ -1,13 +1,13 @@
 pipeline {
     agent {
-        label 'nodo-1'
+        label 'taller3'
     }
 
     stages {
 
         stage('Compilacion') {
             steps {
-               sh 'mvn -D skipTests clean install package'
+               sh 'mvn -DskipTests clean install package'
             }
         }
 
@@ -24,20 +24,22 @@ pipeline {
 
         stage('Build docker image') {
             steps {
-                sh 'docker image build -t webapp-ucreativa .'
+                sh 'docker image build -t spring-webapp .'
             }
         }
 
         stage('Tag docker image') {
             steps {
-                sh 'docker image tag webapp-ucreativa korinrovira/webapp-ucreativa:latest'
+                sh 'docker image tag spring-webapp korinrovira/spring-webapp:latest'
             }
         }
 
         stage('Upload docker image') {
             steps {
-                sh 'docker login -u korinrovira -p &t33lD00r928+'
-                sh 'docker image push korinrovira/webapp-ucreativa:latest'
+                withCredentials([string(credentialsId: 'dockerpwd-id', variable: 'dockerpwd')]) {
+                    sh 'docker login -u korinrovira -p ${dockerpwd}'
+                    sh 'docker image push mmadrigal/spring-webapp:latest'
+                }
             }
         }
     }
